@@ -25,7 +25,7 @@ const SUserSchema = z.object({
 	email: z.email("Invalid email address"),
 	password: z.string().min(8, "Password must be at least 8 characters long"),
 	salt: z.string(),
-	role: z.enum(roleEnum),
+	role: z.enum(roleEnum).default("user"),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
@@ -39,4 +39,6 @@ export const SBaseUserSchema = {
 	}),
 };
 
-export type TBaseUser<T extends keyof typeof SBaseUserSchema> = z.infer<(typeof SBaseUserSchema)[T]>;
+export type TBaseUser<T extends keyof typeof SBaseUserSchema> = z.infer<
+	(typeof SBaseUserSchema)[T]
+>;
