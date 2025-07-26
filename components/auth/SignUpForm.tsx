@@ -15,6 +15,8 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { ZodError } from "zod";
+import { toast } from "sonner";
 
 export function SignUpForm() {
 	const form = useForm<TBaseUser<"signUp">>({
@@ -28,6 +30,11 @@ export function SignUpForm() {
 
 	const onSubmit = async (data: TBaseUser<"signUp">) => {
 		const res = await ASignUp(data);
+		if (res instanceof ZodError || res instanceof Error) {
+			toast.error(res.message);
+		} else {
+			toast.error(res as string);
+		}
 		console.log("Sign Up Response:", res);
 		form.reset();
 	};

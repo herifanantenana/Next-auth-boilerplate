@@ -1,9 +1,12 @@
 "use client";
 
 import { SBaseUserSchema, TBaseUser } from "@/drizzle/schemas/user";
+import { ASignIn } from "@/features/auth/core/action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { ZodError } from "zod";
 import { Button } from "../ui/button";
 import {
 	Form,
@@ -14,7 +17,6 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { ASignIn } from "@/features/auth/core/action";
 
 export function SignInForm() {
 	const form = useForm<TBaseUser<"signIn">>({
@@ -26,8 +28,14 @@ export function SignInForm() {
 	});
 
 	const onSubmit = async (data: TBaseUser<"signIn">) => {
-		const res = await ASignIn(data)
+		const res = await ASignIn(data);
+		if (res instanceof ZodError || res instanceof Error) {
+			toast.error(res.message);
+		} else {
+			toast.error(res as string);
+		}
 		console.log("Sign In Response:", res);
+
 		form.reset();
 	};
 

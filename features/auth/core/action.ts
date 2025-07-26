@@ -3,10 +3,13 @@ import { db } from "@/drizzle/db";
 import { SBaseUserSchema, TBaseUser, UserTable } from "@/drizzle/schemas/user";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { ZodError } from "zod";
 import { getRandomWebBit, hashPassword, verifyPassword } from "../lib/hasher";
 import { createUserSession, deleteUserSession } from "./session";
 
-export const ASignUp = async (unsafeData: TBaseUser<"signUp">) => {
+export const ASignUp = async (
+	unsafeData: TBaseUser<"signUp">,
+): Promise<ZodError | string | unknown> => {
 	const {
 		success: inputSuccess,
 		data: safeInput,
@@ -55,7 +58,9 @@ export const ASignUp = async (unsafeData: TBaseUser<"signUp">) => {
 	redirect("/");
 };
 
-export const ASignIn = async (unsafeData: TBaseUser<"signIn">) => {
+export const ASignIn = async (
+	unsafeData: TBaseUser<"signIn">,
+): Promise<ZodError | string | unknown> => {
 	const {
 		success: inputSuccess,
 		data: safeInput,
