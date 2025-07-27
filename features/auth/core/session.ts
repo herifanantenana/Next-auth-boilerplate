@@ -23,12 +23,14 @@ export const createUserSession = async (unsafeData: TSession) => {
 		error,
 	} = SSessionSchema.safeParse(unsafeData);
 	if (!success) throw new Error(`Invalid session data: ${error.message}`);
-	await redisClient.set(`session:${sessionID}`, safeSession);
+	await redisClient.set(`session:${sessionID}`, safeSession, {
+		ex: env.SESSION_EXPIRATION_SECONDS,
+	});
 	cookieStore.set(env.SESSION_KEY, sessionID, {
 		secure: true,
 		httpOnly: true,
 		sameSite: "strict",
-		expires: Date.now() + env.SESSION_EXPIRATION_SECONDS * 1000,
+		expires: Date.now() + env.SESSION_EXPIRATION_SECONDS,
 	});
 };
 
@@ -55,4 +57,38 @@ export const deleteUserSession = async () => {
 	if (!sessionID) return null;
 	await redisClient.del(`session:${sessionID}`);
 	cookieStore.delete(env.SESSION_KEY);
+};
+
+export const updateUserSession = async (unsafeData: TSession) => {
+	const cookieStore = await cookies();
+	const sessionID = cookieStore.get(env.SESSION_KEY)?.value;
+	if (!sessionID) return null;
+	const {
+		success,
+		data: safeSession,
+		error,
+	} = SSessionSchema.safeParse(unsafeData);
+	if (!success) throw new Error(`Invalid session data: ${error.message}`);
+	await redisClient.set(`session:${sessionID}`, safeSession, {
+		ex: env.SESSION_EXPIRATION_SECONDS,
+	});
+};
+
+export const updateUserSessionExpiration = async () => {
+	const cookieStore = await cookies();
+	const sessionID = cookieStore.get(env.SESSION_KEY)?.value;
+	if (!sessionID) return null;
+
+	const user = await getUserSession();
+	if (!user) return null;
+	await redisClient.expire(
+		`session:${sessionID}`,
+		env.SESSION_EXPIRATION_SECONDS,
+	);
+	cookieStore.set(env.SESSION_KEY, sessionID, {
+		secure: true,
+		httpOnly: true,
+		sameSite: "strict",
+		expires: Date.now() + env.SESSION_EXPIRATION_SECONDS,
+	});
 };

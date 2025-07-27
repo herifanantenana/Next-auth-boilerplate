@@ -5,6 +5,8 @@ import { ASignUp } from "@/features/auth/core/action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { ZodError } from "zod";
 import { Button } from "../ui/button";
 import {
 	Form,
@@ -15,8 +17,6 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { ZodError } from "zod";
-import { toast } from "sonner";
 
 export function SignUpForm() {
 	const form = useForm<TBaseUser<"signUp">>({
@@ -36,7 +36,6 @@ export function SignUpForm() {
 			toast.error(res as string);
 		}
 		console.log("Sign Up Response:", res);
-		form.reset();
 	};
 
 	return (

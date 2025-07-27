@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserSession } from "./features/auth/core/session";
+import { getUserSession, updateUserSessionExpiration } from "./features/auth/core/session";
 
 const privateRoutes = ["/private"];
 const adminRoutes = ["/admin"];
@@ -12,7 +12,8 @@ const authentication = async (req: NextRequest) => {
 
 	if (adminRoutes.includes(req.nextUrl.pathname)) {
 		const user = await getUserSession();
-		if (!user || user.role !== "admin") {
+		if (!user) return NextResponse.redirect(new URL("/sign-in", req.url));
+		if (user.role !== "admin") {
 			return NextResponse.redirect(new URL("/", req.url));
 		}
 	}
@@ -20,6 +21,7 @@ const authentication = async (req: NextRequest) => {
 
 export const middleware = async (req: NextRequest) => {
 	const res = (await authentication(req)) ?? NextResponse.next();
+	await updateUserSessionExpiration();
 	return res;
 };
 

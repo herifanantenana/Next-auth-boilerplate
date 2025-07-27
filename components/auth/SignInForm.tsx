@@ -35,8 +35,6 @@ export function SignInForm() {
 			toast.error(res as string);
 		}
 		console.log("Sign In Response:", res);
-
-		form.reset();
 	};
 
 	return (
