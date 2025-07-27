@@ -82,8 +82,8 @@ export const ASignIn = async (
 
 	const validPassword = await verifyPassword(
 		safeInput.password,
-		user.password,
-		Uint8Array.from(Buffer.from(user.salt, "base64")),
+		user.password!,
+		Uint8Array.from(Buffer.from(user.salt!, "base64")),
 	);
 	if (!validPassword) return "Invalid password";
 

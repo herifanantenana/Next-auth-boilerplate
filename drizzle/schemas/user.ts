@@ -1,5 +1,7 @@
+import { relations } from "drizzle-orm";
 import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import * as z from "zod";
+import { OAuthAccountTable } from "./oAuthAccount";
 
 export const roleEnum = ["admin", "user"] as const;
 export type TRole = (typeof roleEnum)[number];
@@ -9,8 +11,8 @@ export const UserTable = pgTable("users", {
 	id: uuid().primaryKey().defaultRandom(),
 	name: varchar({ length: 256 }).notNull(),
 	email: varchar({ length: 256 }).unique().notNull(),
-	password: varchar({ length: 256 }).notNull(),
-	salt: varchar({ length: 256 }).notNull(),
+	password: varchar({ length: 256 }),
+	salt: varchar({ length: 256 }),
 	role: RoleEnum().default("user").notNull(),
 	createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
 	updatedAt: timestamp({ withTimezone: true })
@@ -19,11 +21,15 @@ export const UserTable = pgTable("users", {
 		.notNull(),
 });
 
+export const UserRelation = relations(UserTable, ({ many }) => ({
+	oAuthAccounts: many(OAuthAccountTable),
+}));
+
 const SUserSchema = z.object({
 	id: z.uuid(),
 	name: z.string().min(1, "Name is required"),
 	email: z.email("Invalid email address"),
-	password: z.string().min(8, "Password must be at least 8 characters long"),
+	password: z.string(),
 	salt: z.string(),
 	role: z.enum(roleEnum).default("user"),
 	createdAt: z.date(),
@@ -32,7 +38,9 @@ const SUserSchema = z.object({
 
 export const SBaseUserSchema = {
 	insert: SUserSchema.omit({ id: true, createdAt: true, updatedAt: true }),
-	signUp: SUserSchema.pick({ name: true, email: true, password: true }),
+	signUp: SUserSchema.pick({ name: true, email: true }).extend({
+		password: z.string().min(8, "Password must be at least 8 characters long"),
+	}),
 	signIn: z.object({
 		email: SUserSchema.shape.email,
 		password: z.string().min(1, "Password is required"),

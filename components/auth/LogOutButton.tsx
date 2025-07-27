@@ -5,12 +5,7 @@ import { Button } from "../ui/button";
 
 export function LogOutButton() {
 	return (
-		<Button
-			variant="destructive"
-			onClick={async () => {
-				await ALogOut();
-			}}
-		>
+		<Button variant="destructive" onClick={async () => await ALogOut()}>
 			Log out
 		</Button>
 	);
