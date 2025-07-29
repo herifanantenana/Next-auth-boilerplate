@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import * as z from "zod";
 import { createDiscordOAuthClient } from "./provider/discord";
 import { createGithubOAuthClient } from "./provider/github";
+import { createGoogleOAuthClient } from "./provider/google";
 
 export function createOAuthClient<T>(provider: TProviderOAuth) {
 	switch (provider) {
@@ -13,6 +14,8 @@ export function createOAuthClient<T>(provider: TProviderOAuth) {
 			return createDiscordOAuthClient();
 		case "github":
 			return createGithubOAuthClient();
+		case "google":
+			return createGoogleOAuthClient();
 		default:
 			throw new Error(`Unsupported OAuth provider: ${provider}`);
 	}
