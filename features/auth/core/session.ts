@@ -1,7 +1,7 @@
 "use server";
 
 import { roleEnum } from "@/drizzle/schemas/user";
-import { env } from "@/lib/env";
+import { env } from "@/lib/env/server";
 import { cookies } from "next/headers";
 import * as z from "zod";
 import { getRandomWebBit } from "../lib/hasher";
@@ -29,7 +29,7 @@ export const createUserSession = async (unsafeData: TSession) => {
 	cookieStore.set(env.SESSION_KEY, sessionID, {
 		secure: true,
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
 		expires: Date.now() + env.SESSION_EXPIRATION_SECONDS,
 	});
 };
@@ -88,7 +88,7 @@ export const updateUserSessionExpiration = async () => {
 	cookieStore.set(env.SESSION_KEY, sessionID, {
 		secure: true,
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
 		expires: Date.now() + env.SESSION_EXPIRATION_SECONDS,
 	});
 };

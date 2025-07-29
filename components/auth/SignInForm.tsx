@@ -17,6 +17,7 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { AOAuth } from "@/features/auth/oauth/action";
 
 export function SignInForm() {
 	const form = useForm<TBaseUser<"signIn">>({
@@ -41,6 +42,29 @@ export function SignInForm() {
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				<div className="space-y-4">
+					<div className="flex justify-center gap-x-4">
+						<Button
+							type="button"
+							variant="outline"
+							onClick={async () => await AOAuth("discord")}
+						>
+							Discord
+						</Button>
+						<Button
+							type="button"
+							variant="outline"
+							onClick={async () => await AOAuth("github")}
+						>
+							Github
+						</Button>
+						<Button
+							type="button"
+							variant="outline"
+							onClick={async () => await AOAuth("google")}
+						>
+							Google
+						</Button>
+					</div>
 					<FormField
 						control={form.control}
 						name="email"

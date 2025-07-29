@@ -79,6 +79,7 @@ export const ASignIn = async (
 		console.log("Error fetching user:", error);
 		return error;
 	}
+	if (!user.password || !user.salt) return "User has no password set";
 
 	const validPassword = await verifyPassword(
 		safeInput.password,
