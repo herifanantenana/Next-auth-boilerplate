@@ -1,7 +1,7 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
 
-export const env = createEnv({
+const env = createEnv({
 	server: {
 		DATABASE_URL: z.url(),
 		REDIS_URL: z.url(),
@@ -43,3 +43,5 @@ export const env = createEnv({
 		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 	},
 });
+
+export default env;

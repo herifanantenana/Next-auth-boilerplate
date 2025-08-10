@@ -50,6 +50,4 @@ export const S_User = {
 /* ---------------------------------- type ---------------------------------- */
 
 export type T_Roles = (typeof roles)[number];
-export type T_User<T extends keyof typeof S_B_user> = z.infer<
-	(typeof S_B_user)[T]
->;
+export type T_User<T extends keyof typeof S_User> = z.infer<(typeof S_User)[T]>;
