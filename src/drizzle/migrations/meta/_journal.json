@@ -8,6 +8,20 @@
       "when": 1754823921165,
       "tag": "0000_heavy_sentinel",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1754906928672,
+      "tag": "0001_last_doctor_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754908076087,
+      "tag": "0002_sturdy_red_wolf",
+      "breakpoints": true
     }
   ]
 }
