@@ -1,4 +1,5 @@
 import {
+	inet,
 	pgEnum,
 	pgTable,
 	text,
@@ -20,6 +21,7 @@ export const SessionTable = pgTable("sessions", {
 	userId: uuid().notNull(),
 	sessionToken: varchar({ length: 64 }).notNull().unique(),
 	deviceType: DeviceTypeEnum().notNull(),
+	ipAddress: inet().notNull(),
 	userAgent: text().notNull(),
 	createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
 	updatedAt: timestamp({ withTimezone: true })
@@ -35,6 +37,7 @@ const S_B_Session = z.object({
 	userId: z.uuid(),
 	sessionToken: z.string().min(1).max(64),
 	deviceType: z.enum(deviceTypes),
+	ipAddress: z.ipv4().or(z.ipv6()),
 	userAgent: z.string().min(1),
 	createdAt: z.date(),
 	updatedAt: z.date(),
