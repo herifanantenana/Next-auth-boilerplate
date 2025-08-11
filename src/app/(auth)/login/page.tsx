@@ -1,4 +1,4 @@
-import { SignInForm } from "@/components/auth/SignInForm";
+import { LoginForm } from "@/components/auth/LoginForm";
 import {
 	Card,
 	CardContent,
@@ -30,7 +30,7 @@ export default async function SignInPage({
 					)}
 				</CardHeader>
 				<CardContent>
-					<SignInForm />
+					<LoginForm />
 				</CardContent>
 			</Card>
 		</main>

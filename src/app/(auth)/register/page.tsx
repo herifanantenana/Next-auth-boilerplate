@@ -1,4 +1,4 @@
-import { SignUpForm } from "@/components/auth/SignUpForm";
+import { RegisterForm } from "@/components/auth/registerForm";
 import {
 	Card,
 	CardContent,
@@ -19,7 +19,7 @@ export default function SignUpPage() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<SignUpForm />
+					<RegisterForm />
 				</CardContent>
 			</Card>
 		</main>

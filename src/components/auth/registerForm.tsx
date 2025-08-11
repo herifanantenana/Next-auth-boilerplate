@@ -1,6 +1,5 @@
 "use client";
 
-import { S_User, T_User } from "@/drizzle/schemas/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -14,8 +13,9 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { S_User, T_User } from "@/types/user";
 
-export function SignUpForm() {
+export function RegisterForm() {
 	const form = useForm<T_User<"signUp">>({
 		resolver: zodResolver(S_User.signUp),
 		defaultValues: {

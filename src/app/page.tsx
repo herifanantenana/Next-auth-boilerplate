@@ -18,10 +18,10 @@ export default function Home() {
 			{user == null ? (
 				<div className="flex gap-4">
 					<Button asChild>
-						<Link href="/sign-in">Sign In</Link>
+						<Link href="/login">Login</Link>
 					</Button>
 					<Button asChild>
-						<Link href="/sign-up">Sign Up</Link>
+						<Link href="/register">Register</Link>
 					</Button>
 				</div>
 			) : (
