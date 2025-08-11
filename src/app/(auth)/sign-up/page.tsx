@@ -1,4 +1,4 @@
-import { SignUpForm } from "@/components/auth/SignIpForm";
+import { SignUpForm } from "@/components/auth/SignUpForm";
 import {
 	Card,
 	CardContent,

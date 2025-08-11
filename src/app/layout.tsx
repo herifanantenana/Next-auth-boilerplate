@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -35,6 +36,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={`${Rubik.variable} ${Arvo.variable} antialiased`}>
 				<main className="p-10">{children}</main>
+				<Toaster expand visibleToasts={3} position="top-center" id="global" richColors />
 			</body>
 		</html>
 	);

@@ -26,7 +26,7 @@ export function SignUpForm() {
 	});
 
 	const onSubmit = async (data: T_User<"signUp">) => {
-		alert("Form submitted with data: " + JSON.stringify(data, null, 2));
+		console.log("Form Data:", data);
 	};
 
 	return (
