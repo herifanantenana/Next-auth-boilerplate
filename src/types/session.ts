@@ -23,20 +23,20 @@ export const deviceOs = [
 
 /* _____________ SCHEMA _____________ */
 const S_B_Session = z.object({
-	id: z.uuid(),
-	userId: z.uuid(),
-	sessionToken: z.string().min(1).max(64),
-	sessionStatus: z.enum(sessionStatus),
-	ipAddress: z.ipv4().or(z.ipv6()),
-	userAgent: z.string().min(1),
-	deviceOs: z.enum(deviceOs).default("unknwon"),
-	deviceBrowser: z.enum(deviceBrowser).default("unknwon"),
-	deviceType: z.enum(deviceTypes).default("unknwon"),
-	deviceVendor: z.string().min(1).default("unknwon"),
-	deviceModel: z.string().min(1).default("unknwon"),
-	expiredAt: z.date(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	id: z.uuid({ message: "Invalid UUID for id" }),
+	userId: z.uuid({ message: "Invalid UUID for userId" }),
+	sessionToken: z.string().min(1, { message: "Session token is required" }).max(64, { message: "Session token must be at most 64 characters" }),
+	sessionStatus: z.enum(sessionStatus, { message: "Invalid session status" }),
+	ipAddress: z.ipv4({ message: "Invalid IPv4 address" }).or(z.ipv6({ message: "Invalid IPv6 address" })),
+	userAgent: z.string().min(1, { message: "User agent is required" }),
+	deviceOs: z.enum(deviceOs, { message: "Invalid device OS" }).default("unknwon"),
+	deviceBrowser: z.enum(deviceBrowser, { message: "Invalid device browser" }).default("unknwon"),
+	deviceType: z.enum(deviceTypes, { message: "Invalid device type" }).default("unknwon"),
+	deviceVendor: z.string().min(1, { message: "Device vendor is required" }).default("unknwon"),
+	deviceModel: z.string().min(1, { message: "Device model is required" }).default("unknwon"),
+	expiredAt: z.date({ message: "Invalid expiredAt date" }),
+	createdAt: z.date({ message: "Invalid createdAt date" }),
+	updatedAt: z.date({ message: "Invalid updatedAt date" }),
 });
 
 export const S_Session = {

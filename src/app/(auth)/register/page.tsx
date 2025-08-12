@@ -7,10 +7,10 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
-export default function SignUpPage() {
+export default function RegisterPage() {
 	return (
 		<main>
-			<h2 className="pb-5">Url: /sign-up</h2>
+			<h2 className="pb-5">Url: /register</h2>
 			<Card className="mx-auto max-w-md space-y-4 px-4 py-10">
 				<CardHeader className="space-y-2 text-center">
 					<CardTitle className="text-5xl font-bold">Register</CardTitle>

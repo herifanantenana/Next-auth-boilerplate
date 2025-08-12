@@ -22,9 +22,6 @@ const Arvo = localFont({
 export const metadata: Metadata = {
 	title: "Next Auth Boilerplate",
 	description: "A boilerplate for Next.js with scratch authentication",
-	icons: {
-		icon: "/user.ico",
-	},
 };
 
 export default function RootLayout({
@@ -36,7 +33,13 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={`${Rubik.variable} ${Arvo.variable} antialiased`}>
 				<main className="p-10">{children}</main>
-				<Toaster expand visibleToasts={3} position="top-center" id="global" richColors />
+				<Toaster
+					expand
+					visibleToasts={3}
+					position="top-center"
+					id="global"
+					richColors
+				/>
 			</body>
 		</html>
 	);
