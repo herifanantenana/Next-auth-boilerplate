@@ -1,5 +1,5 @@
 {
-  "id": "a1ea2f09-4193-49f1-a75d-2c8068c09d3e",
+  "id": "4622799c-1706-4969-851a-28d649531fcf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -53,7 +53,7 @@
         },
         "role": {
           "name": "role",
-          "type": "roles",
+          "type": "user_roles",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -89,11 +89,191 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sessionToken": {
+          "name": "sessionToken",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sessionStatus": {
+          "name": "sessionStatus",
+          "type": "session_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "ipAddress": {
+          "name": "ipAddress",
+          "type": "inet",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userAgent": {
+          "name": "userAgent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deviceOs": {
+          "name": "deviceOs",
+          "type": "device_os",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unknwon'"
+        },
+        "deviceBrowser": {
+          "name": "deviceBrowser",
+          "type": "device_browser",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unknwon'"
+        },
+        "deviceType": {
+          "name": "deviceType",
+          "type": "device_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unknwon'"
+        },
+        "deviceVendor": {
+          "name": "deviceVendor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deviceModel": {
+          "name": "deviceModel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiredAt": {
+          "name": "expiredAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2025-08-19T11:24:18.457Z'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_fk": {
+          "name": "user_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "sessions_id_pk": {
+          "name": "sessions_id_pk",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "sessions_sessionToken_unique": {
+          "name": "sessions_sessionToken_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "sessionToken"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
-    "public.roles": {
-      "name": "roles",
+    "public.device_browser": {
+      "name": "device_browser",
+      "schema": "public",
+      "values": [
+        "chrome",
+        "firefox",
+        "safari",
+        "edge",
+        "opera",
+        "unknwon"
+      ]
+    },
+    "public.device_os": {
+      "name": "device_os",
+      "schema": "public",
+      "values": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "unknwon"
+      ]
+    },
+    "public.device_types": {
+      "name": "device_types",
+      "schema": "public",
+      "values": [
+        "mobile",
+        "desktop",
+        "tablet",
+        "unknwon"
+      ]
+    },
+    "public.session_status": {
+      "name": "session_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "expired"
+      ]
+    },
+    "public.user_roles": {
+      "name": "user_roles",
       "schema": "public",
       "values": [
         "admin",

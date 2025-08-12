@@ -1,9 +1,11 @@
 import { createEnv } from "@t3-oss/env-nextjs";
+import "dotenv/config";
 import * as z from "zod";
 
-const env = createEnv({
+export const env = createEnv({
 	server: {
 		DATABASE_URL: z.url(),
+		DATABASE_LOCAL_URL: z.string(),
 		REDIS_URL: z.url(),
 		REDIS_TOKEN: z.string().min(1),
 		SESSION_KEY: z.string().min(1),
@@ -23,6 +25,7 @@ const env = createEnv({
 	},
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
+		DATABASE_LOCAL_URL: process.env.DATABASE_LOCAL_URL,
 		REDIS_URL: process.env.REDIS_URL,
 		REDIS_TOKEN: process.env.REDIS_TOKEN,
 		SESSION_KEY: process.env.SESSION_KEY,
@@ -43,5 +46,3 @@ const env = createEnv({
 		GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 	},
 });
-
-export default env;

@@ -1,8 +1,11 @@
 "use client";
 
+import { SA_Register } from "@/features/auth/core/action";
+import { S_User, T_User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
 	Form,
@@ -13,11 +16,10 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { S_User, T_User } from "@/types/user";
 
 export function RegisterForm() {
-	const form = useForm<T_User<"signUp">>({
-		resolver: zodResolver(S_User.signUp),
+	const form = useForm<T_User<"register">>({
+		resolver: zodResolver(S_User.register),
 		defaultValues: {
 			username: "",
 			email: "",
@@ -25,8 +27,13 @@ export function RegisterForm() {
 		},
 	});
 
-	const onSubmit = async (data: T_User<"signUp">) => {
-		console.log("Form Data:", data);
+	const onSubmit = async (data: T_User<"register">) => {
+		const res = await SA_Register(data);
+		console.log(res);
+		if (!res.success) {
+			return toast.error(res.error, { toasterId: "global" });
+		}
+		return toast.success(res.message, { toasterId: "global" });
 	};
 
 	return (

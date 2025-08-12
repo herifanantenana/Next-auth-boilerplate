@@ -1,7 +1,13 @@
 import { userRoles } from "@/types/user";
+import { relations } from "drizzle-orm";
 import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { SessionTable } from "./session";
 
-export const UserRoleEnum = pgEnum("roles", userRoles);
+/* ______________ ENUM ______________ */
+
+export const UserRoleEnum = pgEnum("user_roles", userRoles);
+
+/* ______________ TABLE ______________ */
 export const UserTable = pgTable("users", {
 	id: uuid().primaryKey().defaultRandom(),
 	email: varchar({ length: 255 }).notNull().unique(),
@@ -17,3 +23,8 @@ export const UserTable = pgTable("users", {
 		.$onUpdateFn(() => new Date())
 		.notNull(),
 });
+
+/* _____________ RELATION ____________ */
+export const UserRelation = relations(UserTable, ({ many }) => ({
+	sessions: many(SessionTable),
+}));

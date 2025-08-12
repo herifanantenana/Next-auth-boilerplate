@@ -16,15 +16,15 @@ import {
 import { Input } from "../ui/input";
 
 export function LoginForm() {
-	const form = useForm<T_User<"signIn">>({
-		resolver: zodResolver(S_User.signIn),
+	const form = useForm<T_User<"login">>({
+		resolver: zodResolver(S_User.login),
 		defaultValues: {
 			email: "",
 			password: "",
 		},
 	});
 
-	const onSubmit = async (data: T_User<"signIn">) => {
+	const onSubmit = async (data: T_User<"login">) => {
 		alert("Form submitted with data: " + JSON.stringify(data, null, 2));
 	};
 

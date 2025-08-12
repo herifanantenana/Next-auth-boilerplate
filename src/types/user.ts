@@ -9,9 +9,9 @@ export const userRoles = ["admin", "user"] as const;
 const S_B_user = z.object({
 	id: z.uuid(),
 	email: z.email(),
-	isVerified: z.date().nullable(),
+	isVerified: z.date().optional().nullable(),
 	username: z.string().min(1).max(255),
-	fullname: z.string().max(255).nullable(),
+	fullname: z.string().max(255).optional().nullable(),
 	password: z.string().min(8).max(255).optional(),
 	salt: z.string().min(1).max(255).optional(),
 	role: z.enum(userRoles).default("user"),
@@ -21,10 +21,10 @@ const S_B_user = z.object({
 
 export const S_User = {
 	insert: S_B_user.omit({ id: true, createdAt: true, updatedAt: true }),
-	signUp: S_B_user.pick({ email: true, username: true }).extend({
+	register: S_B_user.pick({ email: true, username: true }).extend({
 		password: z.string().min(8).max(255),
 	}),
-	signIn: S_B_user.pick({ email: true }).extend({
+	login: S_B_user.pick({ email: true }).extend({
 		password: z.string().min(1).max(255),
 	}),
 };
