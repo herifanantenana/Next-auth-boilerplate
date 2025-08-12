@@ -1,4 +1,5 @@
 import z from "zod";
+import { userRoles } from "./user";
 
 /* ____________ CONSTANT ____________ */
 export const sessionStatus = ["active", "expired"] as const;
@@ -53,6 +54,14 @@ export const S_Session = {
 		deviceType: true,
 		deviceVendor: true,
 		deviceModel: true,
+	}),
+	insertRedis: S_B_Session.pick({
+		userId: true,
+		sessionToken: true,
+		expiredAt: true,
+	}).extend({
+		sessionId: z.uuid(),
+		userRole: z.enum(userRoles)
 	}),
 };
 

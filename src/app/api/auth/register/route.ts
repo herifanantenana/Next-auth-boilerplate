@@ -16,9 +16,8 @@ export async function POST(req: NextRequest) {
 		const existingUser = await db.query.UserTable.findFirst({
 			where: eq(UserTable.email, body.email),
 		});
-		if (existingUser) return NextHttpResponse.conflict("User already exists");
+		if (existingUser) return NextHttpResponse.conflict("Email already exists");
 	} catch (error) {
-		console.log(error);
 		return NextHttpResponse.internalError("Failed to check for existing user");
 	}
 
@@ -70,12 +69,14 @@ export async function POST(req: NextRequest) {
 				.returning({
 					id: SessionTable.id,
 					sessionToken: SessionTable.sessionToken,
+					expiredAt: SessionTable.expiredAt,
 				});
 			return {
 				userId: newUser.id,
 				userRole: newUser.role,
 				sessionId: newSession.id,
 				sessionToken: newSession.sessionToken,
+				expiredAt: newSession.expiredAt,
 			};
 		});
 		return NextHttpResponse.created(

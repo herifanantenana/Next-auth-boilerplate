@@ -3,24 +3,25 @@
 import { env } from "@/lib/env/client";
 import { T_NextHttpResponse } from "@/lib/response/nextHttp";
 import { SA_Response, T_SA_Response } from "@/lib/response/serverAction";
+import { T_Session } from "@/types/session";
 import { S_User, T_User } from "@/types/user";
-
+import { ZodError } from "zod";
+import { createRedisUserSession } from "./session";
 
 /* _______ REGISTER A NEW USER ______ */
 export const SA_Register = async (
 	unsafeData: T_User<"register">,
 ): Promise<T_SA_Response> => {
-
 	/* Parse FormData ------------------- */
 	const {
-		success,
-		data: safeData,
-		error: errorData,
+		success: successFormData,
+		data: safeFormData,
+		error: errorFormData,
 	} = S_User.register.safeParse(unsafeData);
-	if (!success) {
+	if (!successFormData) {
 		return SA_Response.parseZodError(
 			"Invalid registration data. Please check your input and try again.",
-			errorData,
+			errorFormData,
 		);
 	}
 
@@ -30,12 +31,22 @@ export const SA_Register = async (
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(safeData),
+		body: JSON.stringify(safeFormData),
 	});
-	const body: T_NextHttpResponse<any> = await res.json();
-	if (!res.ok) return SA_Response.error(`${body.type}: ${body.message}`);
+	const body: T_NextHttpResponse<T_Session<"insertRedis">> = await res.json();
+	if (!res.ok || !body.data)
+		return SA_Response.error(`${body.type}: ${body.message}`);
 
-	// todo: create session on redis
 	/* Create Session On Redis ---------- */
+	try {
+		await createRedisUserSession(body.data);
+	} catch (error) {
+		if (error instanceof ZodError)
+			return SA_Response.parseZodError(
+				"Invalid session data. Please try again.",
+				error,
+			);
+		return SA_Response.error("Failed to create session. Please try again.");
+	}
 	return SA_Response.success(body.message, body.data);
 };

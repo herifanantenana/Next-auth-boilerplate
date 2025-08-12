@@ -19,7 +19,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { UserTable } from "./user";
 
-
 /* ---------------------------------- ENUM ---------------------------------- */
 
 export const SessionStatusEnum = pgEnum("session_status", sessionStatus);
@@ -43,9 +42,11 @@ export const SessionTable = pgTable(
 		deviceType: DeviceTypeEnum().default("unknwon").notNull(),
 		deviceVendor: text().notNull(),
 		deviceModel: text().notNull(),
-		expiredAt: timestamp({ withTimezone: true }).default(
-			new Date(Date.now() + env.SESSION_EXPIRATION_SECONDS * 1000),
-		).notNull(),
+		expiredAt: timestamp({ withTimezone: true })
+			.$defaultFn(
+				() => new Date(Date.now() + env.SESSION_EXPIRATION_SECONDS * 1000),
+			)
+			.notNull(),
 		createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
 		updatedAt: timestamp({ withTimezone: true })
 			.defaultNow()
