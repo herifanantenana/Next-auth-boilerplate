@@ -1,7 +1,10 @@
 "use server";
 
+import { db } from "@/drizzle/db";
+import { SessionTable } from "@/drizzle/schemas/session";
 import { env } from "@/lib/env/server";
 import { S_Session, T_Session } from "@/types/session";
+import { and, eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redisClient } from "../lib/redis";
 
@@ -37,12 +40,10 @@ export const getCurrentSession =
 		/* Get Session Token From Cookie --- */
 		const cookieStore = await cookies();
 		const sessionToken = cookieStore.get(env.SESSION_KEY)?.value;
-		console.log("sessionToken -----", sessionToken);
 		if (!sessionToken) return null;
 
 		/* Get Session From Redis ----------- */
 		const sessionRedis = await redisClient.get(sessionToken);
-		console.log("sessionRedis -----", sessionRedis);
 		if (!sessionRedis) return null;
 
 		/* Parse Session Data ---------------- */
@@ -51,9 +52,35 @@ export const getCurrentSession =
 			data: safeSessionData,
 			error: errorSessionData,
 		} = S_Session.insertRedis.safeParse(sessionRedis);
-		console.log("errorSessionData -----", errorSessionData);
 
 		if (!successSessionData) return null;
 
 		return safeSessionData;
 	};
+
+/* _____ DELETE CURRENT SESSION _____ */
+export const deleteCurrentSession = async () => {
+	/* Get Current Session -------------- */
+	const currentSession = await getCurrentSession();
+	if (!currentSession) return null;
+
+	/* Delete Session On Cookie -------- */
+	const cookieStore = await cookies();
+	cookieStore.delete(env.SESSION_KEY);
+
+	/* Delete Session On Redis ---------- */
+	await redisClient.del(currentSession.sessionToken);
+
+	/* Set Session Inactive On Db ------- */
+	await db
+		.update(SessionTable)
+		.set({
+			sessionStatus: "revoked",
+		})
+		.where(
+			and(
+				eq(SessionTable.id, currentSession.sessionId),
+				eq(SessionTable.sessionToken, currentSession.sessionToken),
+			),
+		);
+};

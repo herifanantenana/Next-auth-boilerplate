@@ -5,9 +5,9 @@ import { SA_Response, T_SA_Response } from "@/lib/response/action";
 import { T_NextHttpResponse } from "@/lib/response/http";
 import { T_Session } from "@/types/session";
 import { S_User, T_User } from "@/types/user";
+import { redirect } from "next/navigation";
 import { ZodError } from "zod";
-import { createRedisUserSession } from "./session";
-
+import { createRedisUserSession, deleteCurrentSession } from "./session";
 /* _______ REGISTER A NEW USER ______ */
 export const SA_Register = async (
 	unsafeData: T_User<"register">,
@@ -92,4 +92,14 @@ export const SA_Login = async (
 		return SA_Response.error("Failed to create session. Please try again.");
 	}
 	return SA_Response.success(body.message);
+};
+
+/* ___________ LOGOUT USER __________ */
+export const SA_Logout = async () => {
+	try {
+		await deleteCurrentSession();
+		redirect("/");
+	} catch (error) {
+		return SA_Response.error("Failed to logout. Please try again.");
+	}
 };

@@ -2,7 +2,7 @@ import z from "zod";
 import { userRoles } from "./user";
 
 /* ____________ CONSTANT ____________ */
-export const sessionStatus = ["active", "expired"] as const;
+export const sessionStatus = ["active", "expired", "revoked"] as const;
 export const deviceTypes = ["mobile", "desktop", "tablet", "unknwon"] as const;
 export const deviceBrowser = [
 	"chrome",

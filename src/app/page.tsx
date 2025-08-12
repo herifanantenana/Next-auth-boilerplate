@@ -1,3 +1,4 @@
+import { LogOutButton } from "@/components/auth/LogOutButton";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -37,6 +38,7 @@ export default async function Home() {
 								<Link href="/admin">Admin page</Link>
 							</Button>
 						)}
+						<LogOutButton />
 					</CardContent>
 				</Card>
 			)}
