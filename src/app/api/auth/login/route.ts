@@ -3,7 +3,7 @@ import { UserTable } from "@/drizzle/schemas";
 import { SessionTable } from "@/drizzle/schemas/session";
 import { getDeviceInfo } from "@/features/auth/lib/device";
 import { generateRandomByte, verifyPassword } from "@/features/auth/lib/haser";
-import { NextHttpResponse } from "@/lib/response/nextHttp";
+import { NextHttpResponse } from "@/lib/response/http";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 

@@ -6,7 +6,7 @@ export const userRoles = ["admin", "user"] as const;
 
 /* --------------------------------- schema --------------------------------- */
 
-const S_B_user = z.object({
+const S_B_User = z.object({
 	id: z.uuid({ message: "Invalid UUID" }),
 	email: z.email({ message: "Invalid email address" }),
 	isVerified: z.date().optional().nullable(),
@@ -35,14 +35,15 @@ const S_B_user = z.object({
 });
 
 export const S_User = {
-	insert: S_B_user.omit({ id: true, createdAt: true, updatedAt: true }),
-	register: S_B_user.pick({ email: true, username: true }).extend({
+	insert: S_B_User.omit({ id: true, createdAt: true, updatedAt: true }),
+	current: S_B_User.pick({ id: true, role: true }),
+	register: S_B_User.pick({ email: true, username: true }).extend({
 		password: z
 			.string()
 			.min(8, { message: "Password must be at least 8 characters" })
 			.max(255, { message: "Password too long" }),
 	}),
-	login: S_B_user.pick({ email: true }).extend({
+	login: S_B_User.pick({ email: true }).extend({
 		password: z
 			.string()
 			.min(1, { message: "Password is required" })

@@ -6,13 +6,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { getCurrentUser } from "@/features/auth/core/currentUser";
 import Link from "next/link";
 
-export default function Home() {
-	const user = {
-		name: "John Doe",
-		role: "admin", // or "user"
-	};
+export default async function Home() {
+	const user = await getCurrentUser();
 	return (
 		<main>
 			{user == null ? (
@@ -27,7 +25,7 @@ export default function Home() {
 			) : (
 				<Card className="mx-auto max-w-md">
 					<CardHeader>
-						<CardTitle>{user.name}</CardTitle>
+						<CardTitle>{user.id}</CardTitle>
 						<CardDescription>{user.role}</CardDescription>
 					</CardHeader>
 					<CardContent className="flex gap-4">

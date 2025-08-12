@@ -58,7 +58,6 @@ export const S_Session = {
 	insertRedis: S_B_Session.pick({
 		userId: true,
 		sessionToken: true,
-		expiredAt: true,
 	}).extend({
 		sessionId: z.uuid(),
 		userRole: z.enum(userRoles)
