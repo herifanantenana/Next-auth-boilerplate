@@ -49,6 +49,48 @@ export const SA_Register = async (
 			);
 		return SA_Response.error("Failed to create session. Please try again.");
 	}
-	// return SA_Response.success(body.message, body.data);
-	redirect("/");
+	return SA_Response.success(body.message, body.data);
+};
+
+/* _______ AUTHENTICATE A USER ______ */
+export const SA_Login = async (
+	unsafeData: T_User<"login">,
+): Promise<T_SA_Response> => {
+	/* Parse FormData ------------------- */
+	const {
+		success: successFormData,
+		data: safeFormData,
+		error: errorFormData,
+	} = S_User.login.safeParse(unsafeData);
+	if (!successFormData) {
+		return SA_Response.parseZodError(
+			"Invalid login data. Please check your input and try again.",
+			errorFormData,
+		);
+	}
+
+	/* Create Session On Db ------------- */
+	const res = await fetch(`${env.NEXT_PUBLIC_APP_BASE_URL}/api/auth/login`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(safeFormData),
+	});
+	const body: T_NextHttpResponse<T_Session<"insertRedis">> = await res.json();
+	if (!res.ok || !body.data)
+		return SA_Response.error(`${body.type}: ${body.message}`);
+
+	/* Create Session On Redis ---------- */
+	try {
+		await createRedisUserSession(body.data);
+	} catch (error) {
+		if (error instanceof ZodError)
+			return SA_Response.parseZodError(
+				"Invalid session data. Please try again.",
+				error,
+			);
+		return SA_Response.error("Failed to create session. Please try again.");
+	}
+	return SA_Response.success(body.message);
 };

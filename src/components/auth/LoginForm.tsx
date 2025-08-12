@@ -1,9 +1,12 @@
 "use client";
 
+import { SA_Login } from "@/features/auth/core/action";
 import { S_User, T_User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
 	Form,
@@ -16,6 +19,7 @@ import {
 import { Input } from "../ui/input";
 
 export function LoginForm() {
+	const router = useRouter();
 	const form = useForm<T_User<"login">>({
 		resolver: zodResolver(S_User.login),
 		defaultValues: {
@@ -25,7 +29,13 @@ export function LoginForm() {
 	});
 
 	const onSubmit = async (data: T_User<"login">) => {
-		alert("Form submitted with data: " + JSON.stringify(data, null, 2));
+		const res = await SA_Login(data);
+		console.log(res);
+		if (!res.success) {
+			return toast.error(res.error, { toasterId: "global" });
+		}
+		toast.success(res.message, { toasterId: "global" });
+		return router.replace("/");
 	};
 
 	return (
@@ -70,7 +80,7 @@ export function LoginForm() {
 					<p className="text-muted-foreground text-center text-sm">
 						Don&apos;t have an account?{" "}
 						<Link
-							href="/sign-up"
+							href="/register"
 							className="font-semibold text-blue-500 hover:underline"
 						>
 							Register

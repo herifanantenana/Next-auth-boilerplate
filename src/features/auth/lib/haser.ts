@@ -17,3 +17,13 @@ export const hashPassword = async (
 export const generateRandomByte = (length: number = 16): string => {
 	return crypto.randomBytes(length).toString("hex");
 };
+
+/* _________ VERIFY PASSWORD ________ */
+export const verifyPassword = async (
+	clearPassword: string,
+	salt: string,
+	hashedPassword: string,
+): Promise<boolean> => {
+	const hashed = await hashPassword(clearPassword, salt);
+	return hashed === hashedPassword;
+};

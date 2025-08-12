@@ -16,8 +16,10 @@ import {
 	FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { useRouter } from "next/navigation";
 
 export function RegisterForm() {
+	const router = useRouter();
 	const form = useForm<T_User<"register">>({
 		resolver: zodResolver(S_User.register),
 		defaultValues: {
@@ -33,7 +35,8 @@ export function RegisterForm() {
 		if (!res.success) {
 			return toast.error(res.error, { toasterId: "global" });
 		}
-		return toast.success(res.message, { toasterId: "global" });
+		toast.success(res.message, { toasterId: "global" });
+		return router.replace("/");
 	};
 
 	return (
@@ -91,7 +94,7 @@ export function RegisterForm() {
 					<p className="text-muted-foreground text-center text-sm">
 						Already have an account?{" "}
 						<Link
-							href="/sign-in"
+							href="/login"
 							className="font-semibold text-blue-500 hover:underline"
 						>
 							Log In

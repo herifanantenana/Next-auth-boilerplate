@@ -2,7 +2,7 @@ import { ZodError } from "zod";
 
 interface I_SA_Success<T = any> {
 	success: true;
-	data: T;
+	data?: T;
 	message?: string;
 }
 
@@ -19,7 +19,7 @@ export type T_SA_Response<T = any> = I_SA_Success<T> | I_SA_Error;
 export class SA_Response {
 
 	/* On Success --------------------- */
-	static success<T>(message: string, data: T): I_SA_Success<T> {
+	static success<T>(message: string, data?: T): I_SA_Success<T> {
 		return {
 			success: true,
 			message,

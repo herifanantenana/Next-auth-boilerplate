@@ -79,11 +79,11 @@ export async function POST(req: NextRequest) {
 				expiredAt: newSession.expiredAt,
 			};
 		});
-		return NextHttpResponse.created(
-			"User and session created successfully",
-			resTx,
-		);
+		return NextHttpResponse.created("Registration successful", resTx);
 	} catch (error) {
-		return NextHttpResponse.internalError("Failed to create user", error);
+		return NextHttpResponse.internalError(
+			"Failed to create user or session",
+			error,
+		);
 	}
 }
